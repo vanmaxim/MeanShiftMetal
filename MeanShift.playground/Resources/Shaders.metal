@@ -8,7 +8,7 @@ kernel void pow_sum(device float4 *input    [[buffer(0)]],
                     constant int &height    [[buffer(2)]],
                     uint gid                [[thread_position_in_grid]])
 {
-    if (gid >= height)
+    if (gid >= static_cast<uint>(height))
         return;
     
     float4 x = input[gid];
@@ -23,7 +23,12 @@ kernel void calculate_force(device float4 *input    [[buffer(0)]],
                             constant int &height    [[buffer(4)]],
                             uint2 gid               [[thread_position_in_grid]])
 {
-    if(gid.x >= width || gid.y >= height)
+    if(gid.x >= static_cast<uint>(width) || gid.y >= static_cast<uint>(height))
         return;
+    
+    uint const idx = gid.y * static_cast<uint>(width) + gid.x;
+    float const sigma = 2.0;
+    float const distance = pow_sum[gid.x] + pow_sum[gid.y] - 2.0 * dot(input[gid.x], input[gid.y]);
+    output[idx] = exp(-0.5 * pow(sigma, 2) * distance);
 }
 

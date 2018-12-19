@@ -38,9 +38,9 @@ let data = getInput()
 var width = data.count
 var height = data.count
 
-let input = device.makeBuffer(bytes: data, length: MemoryLayout<float4>.stride * height, options: .storageModeShared)
+let input = device.makeBuffer(bytes: data, length: MemoryLayout<float4>.size * height, options: .storageModeShared)
 
-let powSums = device.makeBuffer(length: MemoryLayout<Float>.stride * height, options: .storageModePrivate)
+let powSums = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModeShared)
 
 let _ = {
     
@@ -56,7 +56,7 @@ let _ = {
     encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
 }()
 
-let forces = device.makeBuffer(length: MemoryLayout<Float>.stride * width * height, options: .storageModeShared)
+let forces = device.makeBuffer(length: MemoryLayout<Float>.size * width * height, options: .storageModeShared)
 
 let _ = {
     
@@ -71,8 +71,8 @@ let _ = {
     let h = pipeline.maxTotalThreadsPerThreadgroup / w
     let threadGroupSize = MTLSizeMake(w, h, 1)
     let threadGroups = MTLSizeMake(
-        (width       + threadGroupSize.width  - 1) / threadGroupSize.width,
-        (height      + threadGroupSize.height - 1) / threadGroupSize.height,
+        (width  + threadGroupSize.width  - 1) / threadGroupSize.width,
+        (height + threadGroupSize.height - 1) / threadGroupSize.height,
         1
     )
     encoder.setComputePipelineState(pipeline)
@@ -84,8 +84,6 @@ encoder.endEncoding()
 buffer.commit()
 buffer.waitUntilCompleted()
 
-//let ptr = powSumOutput?.contents().bindMemory(to: Float.self, capacity: height)
-//let buf = UnsafeBufferPointer(start: ptr, count: height)
-//let a = Array(buf)
-
-
+let ptr = forces?.contents().bindMemory(to: Float.self, capacity: width * height)
+let buf = UnsafeBufferPointer(start: ptr, count: width * height)
+let a = Array(buf)
