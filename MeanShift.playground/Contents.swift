@@ -1,6 +1,7 @@
 import Cocoa
 import Metal
 import simd
+import MetalPerformanceShaders
 
 public func createLibrary() -> MTLLibrary {
     var library: MTLLibrary?
@@ -56,15 +57,15 @@ let _ = {
     encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
 }()
 
-let forces = device.makeBuffer(length: MemoryLayout<Float>.size * width * height, options: .storageModeShared)
-
+let forcesTextureDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: MTLPixelFormat.r32Float, width: width, height: height, mipmapped: false)
+let forcesTexture = device.makeTexture(descriptor: forcesTextureDesc)!
 let _ = {
     
     encoder.setBuffer(input, offset: 0, index: 0)
     encoder.setBuffer(powSums, offset: 0, index: 1)
-    encoder.setBuffer(forces, offset: 0, index: 2)
-    encoder.setBytes(&width, length: MemoryLayout<Int>.size, index: 3)
-    encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 4)
+    encoder.setBytes(&width, length: MemoryLayout<Int>.size, index: 2)
+    encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 3)
+    encoder.setTexture(forcesTexture, index: 0)
     
     let pipeline = try! device.makeComputePipelineState(function: library.makeFunction(name: "calculate_force")!)
     let w = pipeline.threadExecutionWidth
@@ -81,9 +82,13 @@ let _ = {
 
 encoder.endEncoding()
 
+let image = MPSImage(texture: forcesTexture, featureChannels: 1)
+let reduce = MPSNNReduceColumnSum(device: device)
+let reducedDesc = MPSImageDescriptor(channelFormat: .float32, width: width, height: 1, featureChannels: 1)
+let reduced = MPSImage(device: device, imageDescriptor: reducedDesc)
+reduce.encode(commandBuffer: buffer, sourceImage: image, destinationImage: reduced)
+
 buffer.commit()
 buffer.waitUntilCompleted()
 
-let ptr = forces?.contents().bindMemory(to: Float.self, capacity: width * height)
-let buf = UnsafeBufferPointer(start: ptr, count: width * height)
-let a = Array(buf)
+reduced.toFloatArray()
