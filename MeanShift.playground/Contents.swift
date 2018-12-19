@@ -82,13 +82,38 @@ let _ = {
 
 encoder.endEncoding()
 
-let image = MPSImage(texture: forcesTexture, featureChannels: 1)
+let forcesImage = MPSImage(texture: forcesTexture, featureChannels: 1)
 let reduce = MPSNNReduceColumnSum(device: device)
 let reducedDesc = MPSImageDescriptor(channelFormat: .float32, width: width, height: 1, featureChannels: 1)
-let reduced = MPSImage(device: device, imageDescriptor: reducedDesc)
-reduce.encode(commandBuffer: buffer, sourceImage: image, destinationImage: reduced)
+let reducedImage = MPSImage(device: device, imageDescriptor: reducedDesc)
+reduce.encode(commandBuffer: buffer, sourceImage: forcesImage, destinationImage: reducedImage)
+
+let _ = {
+    
+    let encoder = buffer.makeComputeCommandEncoder()!
+    encoder.setTexture(forcesTexture, index: 0)
+    encoder.setTexture(reducedImage.texture, index: 1)
+    
+    let pipeline = try! device.makeComputePipelineState(function: library.makeFunction(name: "normalize")!)
+    let w = pipeline.threadExecutionWidth
+    let h = pipeline.maxTotalThreadsPerThreadgroup / w
+    let threadGroupSize = MTLSizeMake(w, h, 1)
+    let threadGroups = MTLSizeMake(
+        (width  + threadGroupSize.width  - 1) / threadGroupSize.width,
+        (height + threadGroupSize.height - 1) / threadGroupSize.height,
+        1
+    )
+    encoder.setComputePipelineState(pipeline)
+    encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
+    
+    encoder.endEncoding()
+}()
 
 buffer.commit()
+
 buffer.waitUntilCompleted()
 
-reduced.toFloatArray()
+//norms
+reducedImage.toFloatArray()
+
+forcesTexture.toFloatArray(width: width, height: height, featureChannels: 1)
