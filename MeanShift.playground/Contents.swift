@@ -55,8 +55,6 @@ let device = MTLCreateSystemDefaultDevice()!
 let library = createLibrary()
 
 let commandQueue = device.makeCommandQueue()!
-let buffer = commandQueue.makeCommandBuffer()!
-let encoder = buffer.makeComputeCommandEncoder()!
 
 let data = getInput()
 
@@ -69,78 +67,87 @@ var inputMatrix = MPSMatrix(buffer: input,
 
 let squaredSum = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModePrivate)
 
-encoder.setBuffer(input, offset: 0, index: 0)
-encoder.setBuffer(squaredSum, offset: 0, index: 1)
-encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 2)
-    
-dispathGridAsRow(device: device,
-                 function: library.makeFunction(name: "square_sum")!,
-                 encoder: encoder,
-                 rowLenght: height)
-
 let forces = device.makeTexture(descriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float,
                                                                                      width: width,
                                                                                      height: height,
                                                                                      mipmapped: false))!
 
-encoder.setBuffer(input, offset: 0, index: 0)
-encoder.setBuffer(squaredSum, offset: 0, index: 1)
-encoder.setTexture(forces, index: 0)
-encoder.setBytes(&sigma, length: MemoryLayout<Float>.size, index: 2)
-
-dispathGridAsMatrix(device: device,
-                    function: library.makeFunction(name: "calculate_force")!,
-                    encoder: encoder,
-                    width: width,
-                    height: height)
-
-encoder.endEncoding()
-
 let reduce = MPSNNReduceColumnSum(device: device)
 let reduced = MPSImage(device: device,
                        imageDescriptor: MPSImageDescriptor(channelFormat: .float32, width: width, height: 1, featureChannels: 1))
 
-reduce.encode(commandBuffer: buffer,
-              sourceImage: MPSImage(texture: forces, featureChannels: 1),
-              destinationImage: reduced)
-
-let normEncoder = buffer.makeComputeCommandEncoder()!
-
-normEncoder.setTexture(forces, index: 0)
-normEncoder.setTexture(reduced.texture, index: 1)
-
-dispathGridAsMatrix(device: device,
-                    function: library.makeFunction(name: "normalize")!,
-                    encoder: normEncoder,
-                    width: width,
-                    height: height)
-
-normEncoder.endEncoding()
-
-let blit = buffer.makeBlitCommandEncoder()!
 let forcesBuff = device.makeBuffer(length: MemoryLayout<Float>.size * width * height, options: .storageModePrivate)!
-blit.copy(from: forces, sourceSlice: 0, sourceLevel: 0, sourceOrigin: MTLOrigin(x: 0, y: 0, z: 0), sourceSize: MTLSize(width: width, height: height, depth: 1), to: forcesBuff, destinationOffset: 0, destinationBytesPerRow: MemoryLayout<Float>.size * width, destinationBytesPerImage: forcesBuff.length)
-blit.endEncoding()
 
 let forcesMatrix = MPSMatrix(buffer: forcesBuff,
                              descriptor: MPSMatrixDescriptor(rows: height, columns: width, rowBytes: MemoryLayout<Float>.size * width, dataType: .float32))
 
-let mult = MPSMatrixMultiplication(device: device,
-                                   transposeLeft: true,
-                                   transposeRight: false,
-                                   resultRows: inputMatrix.rows,
-                                   resultColumns: inputMatrix.columns,
-                                   interiorColumns: forcesMatrix.columns,
-                                   alpha: 1,
-                                   beta: 0)
-
-mult.encode(commandBuffer: buffer,
-            leftMatrix: forcesMatrix,
-            rightMatrix: inputMatrix,
-            resultMatrix: inputMatrix)
-
-buffer.commit()
-buffer.waitUntilCompleted()
+for _ in 0..<10 {
+    
+    let buffer = commandQueue.makeCommandBuffer()!
+    let encoder = buffer.makeComputeCommandEncoder()!
+    
+    encoder.setBuffer(input, offset: 0, index: 0)
+    encoder.setBuffer(squaredSum, offset: 0, index: 1)
+    encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 2)
+    
+    dispathGridAsRow(device: device,
+                     function: library.makeFunction(name: "square_sum")!,
+                     encoder: encoder,
+                     rowLenght: height)
+    
+    encoder.setBuffer(input, offset: 0, index: 0)
+    encoder.setBuffer(squaredSum, offset: 0, index: 1)
+    encoder.setTexture(forces, index: 0)
+    encoder.setBytes(&sigma, length: MemoryLayout<Float>.size, index: 2)
+    
+    dispathGridAsMatrix(device: device,
+                        function: library.makeFunction(name: "calculate_force")!,
+                        encoder: encoder,
+                        width: width,
+                        height: height)
+    
+    encoder.endEncoding()
+    
+    reduce.encode(commandBuffer: buffer,
+                  sourceImage: MPSImage(texture: forces, featureChannels: 1),
+                  destinationImage: reduced)
+    
+    let normEncoder = buffer.makeComputeCommandEncoder()!
+    
+    normEncoder.setTexture(forces, index: 0)
+    normEncoder.setTexture(reduced.texture, index: 1)
+    
+    dispathGridAsMatrix(device: device,
+                        function: library.makeFunction(name: "normalize")!,
+                        encoder: normEncoder,
+                        width: width,
+                        height: height)
+    
+    normEncoder.endEncoding()
+    
+    let blit = buffer.makeBlitCommandEncoder()!
+    
+    blit.copy(from: forces, sourceSlice: 0, sourceLevel: 0, sourceOrigin: MTLOrigin(x: 0, y: 0, z: 0), sourceSize: MTLSize(width: width, height: height, depth: 1), to: forcesBuff, destinationOffset: 0, destinationBytesPerRow: MemoryLayout<Float>.size * width, destinationBytesPerImage: forcesBuff.length)
+    
+    blit.endEncoding()
+    
+    let mult = MPSMatrixMultiplication(device: device,
+                                       transposeLeft: true,
+                                       transposeRight: false,
+                                       resultRows: inputMatrix.rows,
+                                       resultColumns: inputMatrix.columns,
+                                       interiorColumns: forcesMatrix.columns,
+                                       alpha: 1,
+                                       beta: 0)
+    
+    mult.encode(commandBuffer: buffer,
+                leftMatrix: forcesMatrix,
+                rightMatrix: inputMatrix,
+                resultMatrix: inputMatrix)
+    
+    buffer.commit()
+    buffer.waitUntilCompleted()
+}
 
 let ptr = inputMatrix.data.contents().bindMemory(to: Float.self, capacity: 4 * height)
 let buf = UnsafeBufferPointer(start: ptr, count: 4 * height)
