@@ -64,14 +64,14 @@ var width = data.count
 var height = data.count
 
 let input = device.makeBuffer(bytes: data, length: MemoryLayout<float4>.size * height, options: .storageModeShared)
-let powSums = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModePrivate)
+let squaredSum = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModePrivate)
 
 encoder.setBuffer(input, offset: 0, index: 0)
-encoder.setBuffer(powSums, offset: 0, index: 1)
+encoder.setBuffer(squaredSum, offset: 0, index: 1)
 encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 2)
     
 dispathGridAsRow(device: device,
-                 function: library.makeFunction(name: "pow_sum")!,
+                 function: library.makeFunction(name: "square_sum")!,
                  encoder: encoder,
                  rowLenght: height)
 
@@ -81,7 +81,7 @@ let forces = device.makeTexture(descriptor: MTLTextureDescriptor.texture2DDescri
                                                                                      mipmapped: false))!
 
 encoder.setBuffer(input, offset: 0, index: 0)
-encoder.setBuffer(powSums, offset: 0, index: 1)
+encoder.setBuffer(squaredSum, offset: 0, index: 1)
 encoder.setTexture(forces, index: 0)
 encoder.setBytes(&sigma, length: MemoryLayout<Float>.size, index: 2)
 

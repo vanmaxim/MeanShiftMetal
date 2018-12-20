@@ -5,10 +5,10 @@ using namespace metal;
 
 // Maybe halfs ?
 
-kernel void pow_sum(device float4 *input    [[buffer(0)]],
-                    device float *output    [[buffer(1)]],
-                    constant uint &lenght   [[buffer(2)]],
-                    uint gid                [[thread_position_in_grid]])
+kernel void square_sum(device float4 *input    [[buffer(0)]],
+                       device float *output    [[buffer(1)]],
+                       constant uint &lenght   [[buffer(2)]],
+                       uint gid                [[thread_position_in_grid]])
 {
     if (gid >= lenght)
         return;
