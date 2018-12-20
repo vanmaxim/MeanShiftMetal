@@ -64,7 +64,7 @@ var width = data.count
 var height = data.count
 
 let input = device.makeBuffer(bytes: data, length: MemoryLayout<float4>.size * height, options: .storageModeShared)
-let powSums = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModeShared)
+let powSums = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModePrivate)
 
 encoder.setBuffer(input, offset: 0, index: 0)
 encoder.setBuffer(powSums, offset: 0, index: 1)
