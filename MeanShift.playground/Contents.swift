@@ -3,7 +3,7 @@ import Metal
 import simd
 import MetalPerformanceShaders
 
-public func createLibrary() -> MTLLibrary {
+func createLibrary() -> MTLLibrary {
     var library: MTLLibrary?
     do {
         let path = Bundle.main.path(forResource: "Shaders", ofType: "metal")
@@ -15,7 +15,7 @@ public func createLibrary() -> MTLLibrary {
     return library!
 }
 
-public func getInput() -> [float4] {
+func getInput() -> [float4] {
     let path = Bundle.main.url(forResource: "input", withExtension: "txt")!
     let data: [float4] = try! String(contentsOf: path, encoding: .utf8)
         .components(separatedBy: .newlines)
@@ -27,6 +27,30 @@ public func getInput() -> [float4] {
     return data
 }
 
+func dispathGridAsRow(device: MTLDevice, function: MTLFunction, encoder: MTLComputeCommandEncoder, rowLenght: Int) {
+    let pipeline = try! device.makeComputePipelineState(function: function)
+    let w = pipeline.maxTotalThreadsPerThreadgroup
+    let threadGroupSize = MTLSizeMake(w, 1, 1);
+    let threadGroups = MTLSizeMake((rowLenght + threadGroupSize.width - 1) / threadGroupSize.width, 1, 1);
+    encoder.setComputePipelineState(pipeline)
+    encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
+}
+
+func dispathGridAsMatrix(device: MTLDevice, function: MTLFunction, encoder: MTLComputeCommandEncoder, width: Int, height: Int) {
+    let pipeline = try! device.makeComputePipelineState(function: function)
+    let w = pipeline.threadExecutionWidth
+    let h = pipeline.maxTotalThreadsPerThreadgroup / w
+    let threadGroupSize = MTLSizeMake(w, h, 1)
+    let threadGroups = MTLSizeMake(
+        (width  + threadGroupSize.width  - 1) / threadGroupSize.width,
+        (height + threadGroupSize.height - 1) / threadGroupSize.height,
+        1
+    )
+    encoder.setComputePipelineState(pipeline)
+    encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
+}
+
+var sigma: Float = 0.7
 let device = MTLCreateSystemDefaultDevice()!
 let library = createLibrary()
 
@@ -40,80 +64,57 @@ var width = data.count
 var height = data.count
 
 let input = device.makeBuffer(bytes: data, length: MemoryLayout<float4>.size * height, options: .storageModeShared)
-
 let powSums = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModeShared)
 
-let _ = {
+encoder.setBuffer(input, offset: 0, index: 0)
+encoder.setBuffer(powSums, offset: 0, index: 1)
+encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 2)
     
-    encoder.setBuffer(input, offset: 0, index: 0)
-    encoder.setBuffer(powSums, offset: 0, index: 1)
-    encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 2)
-    
-    let pipeline = try! device.makeComputePipelineState(function: library.makeFunction(name: "pow_sum")!)
-    let w = pipeline.maxTotalThreadsPerThreadgroup
-    let threadGroupSize = MTLSizeMake(w, 1, 1);
-    let threadGroups = MTLSizeMake((height + threadGroupSize.width - 1) / threadGroupSize.width, 1, 1);
-    encoder.setComputePipelineState(pipeline)
-    encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
-}()
+dispathGridAsRow(device: device,
+                 function: library.makeFunction(name: "pow_sum")!,
+                 encoder: encoder,
+                 rowLenght: height)
 
-let forcesTextureDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: MTLPixelFormat.r32Float, width: width, height: height, mipmapped: false)
-let forcesTexture = device.makeTexture(descriptor: forcesTextureDesc)!
-let _ = {
-    
-    encoder.setBuffer(input, offset: 0, index: 0)
-    encoder.setBuffer(powSums, offset: 0, index: 1)
-    encoder.setBytes(&width, length: MemoryLayout<Int>.size, index: 2)
-    encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 3)
-    encoder.setTexture(forcesTexture, index: 0)
-    
-    let pipeline = try! device.makeComputePipelineState(function: library.makeFunction(name: "calculate_force")!)
-    let w = pipeline.threadExecutionWidth
-    let h = pipeline.maxTotalThreadsPerThreadgroup / w
-    let threadGroupSize = MTLSizeMake(w, h, 1)
-    let threadGroups = MTLSizeMake(
-        (width  + threadGroupSize.width  - 1) / threadGroupSize.width,
-        (height + threadGroupSize.height - 1) / threadGroupSize.height,
-        1
-    )
-    encoder.setComputePipelineState(pipeline)
-    encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
-}()
+let forces = device.makeTexture(descriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float,
+                                                                                     width: width,
+                                                                                     height: height,
+                                                                                     mipmapped: false))!
+
+encoder.setBuffer(input, offset: 0, index: 0)
+encoder.setBuffer(powSums, offset: 0, index: 1)
+encoder.setTexture(forces, index: 0)
+encoder.setBytes(&sigma, length: MemoryLayout<Float>.size, index: 2)
+
+dispathGridAsMatrix(device: device,
+                    function: library.makeFunction(name: "calculate_force")!,
+                    encoder: encoder,
+                    width: width,
+                    height: height)
 
 encoder.endEncoding()
 
-let forcesImage = MPSImage(texture: forcesTexture, featureChannels: 1)
 let reduce = MPSNNReduceColumnSum(device: device)
-let reducedDesc = MPSImageDescriptor(channelFormat: .float32, width: width, height: 1, featureChannels: 1)
-let reducedImage = MPSImage(device: device, imageDescriptor: reducedDesc)
-reduce.encode(commandBuffer: buffer, sourceImage: forcesImage, destinationImage: reducedImage)
+let reduced = MPSImage(device: device,
+                       imageDescriptor: MPSImageDescriptor(channelFormat: .float32, width: width, height: 1, featureChannels: 1))
 
-let _ = {
-    
-    let encoder = buffer.makeComputeCommandEncoder()!
-    encoder.setTexture(forcesTexture, index: 0)
-    encoder.setTexture(reducedImage.texture, index: 1)
-    
-    let pipeline = try! device.makeComputePipelineState(function: library.makeFunction(name: "normalize")!)
-    let w = pipeline.threadExecutionWidth
-    let h = pipeline.maxTotalThreadsPerThreadgroup / w
-    let threadGroupSize = MTLSizeMake(w, h, 1)
-    let threadGroups = MTLSizeMake(
-        (width  + threadGroupSize.width  - 1) / threadGroupSize.width,
-        (height + threadGroupSize.height - 1) / threadGroupSize.height,
-        1
-    )
-    encoder.setComputePipelineState(pipeline)
-    encoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupSize)
-    
-    encoder.endEncoding()
-}()
+reduce.encode(commandBuffer: buffer,
+              sourceImage: MPSImage(texture: forces, featureChannels: 1),
+              destinationImage: reduced)
+
+let normEncoder = buffer.makeComputeCommandEncoder()!
+
+normEncoder.setTexture(forces, index: 0)
+normEncoder.setTexture(reduced.texture, index: 1)
+
+dispathGridAsMatrix(device: device,
+                    function: library.makeFunction(name: "normalize")!,
+                    encoder: normEncoder,
+                    width: width,
+                    height: height)
+
+normEncoder.endEncoding()
 
 buffer.commit()
-
 buffer.waitUntilCompleted()
 
-//norms
-reducedImage.toFloatArray()
-
-forcesTexture.toFloatArray(width: width, height: height, featureChannels: 1)
+forces.toFloatArray(width: width, height: height, featureChannels: 1)
