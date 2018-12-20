@@ -63,7 +63,10 @@ let data = getInput()
 var width = data.count
 var height = data.count
 
-let input = device.makeBuffer(bytes: data, length: MemoryLayout<float4>.size * height, options: .storageModeShared)
+let input = device.makeBuffer(bytes: data, length: MemoryLayout<float4>.size * height, options: .storageModeShared)!
+var inputMatrix = MPSMatrix(buffer: input,
+                            descriptor: MPSMatrixDescriptor(rows: height, columns: 4, rowBytes: MemoryLayout<Float>.size * 4, dataType: .float32))
+
 let squaredSum = device.makeBuffer(length: MemoryLayout<Float>.size * height, options: .storageModePrivate)
 
 encoder.setBuffer(input, offset: 0, index: 0)
@@ -114,7 +117,31 @@ dispathGridAsMatrix(device: device,
 
 normEncoder.endEncoding()
 
+let blit = buffer.makeBlitCommandEncoder()!
+let forcesBuff = device.makeBuffer(length: MemoryLayout<Float>.size * width * height, options: .storageModePrivate)!
+blit.copy(from: forces, sourceSlice: 0, sourceLevel: 0, sourceOrigin: MTLOrigin(x: 0, y: 0, z: 0), sourceSize: MTLSize(width: width, height: height, depth: 1), to: forcesBuff, destinationOffset: 0, destinationBytesPerRow: MemoryLayout<Float>.size * width, destinationBytesPerImage: forcesBuff.length)
+blit.endEncoding()
+
+let forcesMatrix = MPSMatrix(buffer: forcesBuff,
+                             descriptor: MPSMatrixDescriptor(rows: height, columns: width, rowBytes: MemoryLayout<Float>.size * width, dataType: .float32))
+
+let mult = MPSMatrixMultiplication(device: device,
+                                   transposeLeft: true,
+                                   transposeRight: false,
+                                   resultRows: inputMatrix.rows,
+                                   resultColumns: inputMatrix.columns,
+                                   interiorColumns: forcesMatrix.columns,
+                                   alpha: 1,
+                                   beta: 0)
+
+mult.encode(commandBuffer: buffer,
+            leftMatrix: forcesMatrix,
+            rightMatrix: inputMatrix,
+            resultMatrix: inputMatrix)
+
 buffer.commit()
 buffer.waitUntilCompleted()
 
-forces.toFloatArray(width: width, height: height, featureChannels: 1)
+let ptr = inputMatrix.data.contents().bindMemory(to: Float.self, capacity: 4 * height)
+let buf = UnsafeBufferPointer(start: ptr, count: 4 * height)
+let a = Array(buf)

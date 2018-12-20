@@ -3,97 +3,161 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=2350&amp;EndingColumnNumber=49&amp;EndingLineNumber=58&amp;StartingColumnNumber=49&amp;StartingLineNumber=58&amp;Timestamp=566992250.4060301"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=2350&amp;EndingColumnNumber=49&amp;EndingLineNumber=58&amp;StartingColumnNumber=49&amp;StartingLineNumber=58&amp;Timestamp=566997803.179242"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=72&amp;CharacterRangeLoc=4669&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=27&amp;StartingLineNumber=117&amp;Timestamp=566992250.406165"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.179388"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=72&amp;CharacterRangeLoc=4669&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=27&amp;StartingLineNumber=117&amp;Timestamp=566992250.406517"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.179521"
          lockedSize = "{646, 237}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=72&amp;CharacterRangeLoc=4669&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=27&amp;StartingLineNumber=117&amp;Timestamp=566992250.406654"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.179621"
          lockedSize = "{583, 152}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=2350&amp;EndingColumnNumber=49&amp;EndingLineNumber=58&amp;StartingColumnNumber=49&amp;StartingLineNumber=58&amp;Timestamp=566992250.4067889"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=2350&amp;EndingColumnNumber=49&amp;EndingLineNumber=58&amp;StartingColumnNumber=49&amp;StartingLineNumber=58&amp;Timestamp=566997803.179721"
          lockedSize = "{712, 319}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=4&amp;CharacterRangeLoc=2357&amp;EndingColumnNumber=9&amp;EndingLineNumber=60&amp;StartingColumnNumber=5&amp;StartingLineNumber=60&amp;Timestamp=566992250.406894"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=4&amp;CharacterRangeLoc=2357&amp;EndingColumnNumber=9&amp;EndingLineNumber=60&amp;StartingColumnNumber=5&amp;StartingLineNumber=60&amp;Timestamp=566997803.179813"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=72&amp;CharacterRangeLoc=4669&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=27&amp;StartingLineNumber=117&amp;Timestamp=566992250.406983"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.179901"
          lockedSize = "{496, 531}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=448&amp;CharacterRangeLoc=3408&amp;EndingColumnNumber=21&amp;EndingLineNumber=93&amp;StartingColumnNumber=0&amp;StartingLineNumber=82&amp;Timestamp=566992250.407128"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=448&amp;CharacterRangeLoc=3600&amp;EndingColumnNumber=21&amp;EndingLineNumber=96&amp;StartingColumnNumber=0&amp;StartingLineNumber=85&amp;Timestamp=566997803.1800261"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=448&amp;CharacterRangeLoc=3408&amp;EndingColumnNumber=21&amp;EndingLineNumber=93&amp;StartingColumnNumber=0&amp;StartingLineNumber=82&amp;Timestamp=566992250.4072191"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=448&amp;CharacterRangeLoc=3600&amp;EndingColumnNumber=21&amp;EndingLineNumber=96&amp;StartingColumnNumber=0&amp;StartingLineNumber=85&amp;Timestamp=566997803.1801291"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=70&amp;CharacterRangeLoc=4671&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=0&amp;StartingLineNumber=119&amp;Timestamp=566992250.407316"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.1802191"
          lockedSize = "{526, 280}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=70&amp;CharacterRangeLoc=4671&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=0&amp;StartingLineNumber=119&amp;Timestamp=566992250.407445"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.180313"
          lockedSize = "{525, 353}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=1&amp;CharacterRangeLoc=4669&amp;EndingColumnNumber=0&amp;EndingLineNumber=118&amp;StartingColumnNumber=27&amp;StartingLineNumber=117&amp;Timestamp=566992250.407626"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.180432"
          lockedSize = "{671, 504}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=70&amp;CharacterRangeLoc=4671&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=0&amp;StartingLineNumber=119&amp;Timestamp=566992250.407739"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.1805511"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=70&amp;CharacterRangeLoc=4671&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=0&amp;StartingLineNumber=119&amp;Timestamp=566992250.40786"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.180653"
          lockedSize = "{187, 135}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=70&amp;CharacterRangeLoc=4671&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=0&amp;StartingLineNumber=119&amp;Timestamp=566992250.407959"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.1807441"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=69&amp;CharacterRangeLoc=4672&amp;EndingColumnNumber=0&amp;EndingLineNumber=120&amp;StartingColumnNumber=1&amp;StartingLineNumber=119&amp;Timestamp=566992250.4080729"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.1808341"
          lockedSize = "{306, 288}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=4670&amp;EndingColumnNumber=0&amp;EndingLineNumber=118&amp;StartingColumnNumber=0&amp;StartingLineNumber=118&amp;Timestamp=566992250.408177"
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.1809241"
          lockedSize = "{305, 280}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.181041"
+         lockedSize = "{492, 620}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.181144"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.183275"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.183413"
+         lockedSize = "{351, 410}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.183511"
+         lockedSize = "{254, 339}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=80&amp;CharacterRangeLoc=6254&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=0&amp;StartingLineNumber=145&amp;Timestamp=566997803.18361"
+         lockedSize = "{255, 392}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=169&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=0&amp;EndingLineNumber=147&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.183706"
+         lockedSize = "{257, 307}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=27&amp;EndingLineNumber=142&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.183814"
+         lockedSize = "{350, 327}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=6165&amp;EndingColumnNumber=27&amp;EndingLineNumber=142&amp;StartingColumnNumber=27&amp;StartingLineNumber=142&amp;Timestamp=566997803.183906"
+         lockedSize = "{347, 262}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=2&amp;CharacterRangeLoc=6319&amp;EndingColumnNumber=6&amp;EndingLineNumber=146&amp;StartingColumnNumber=4&amp;StartingLineNumber=146&amp;Timestamp=566997803.183997"
+         lockedSize = "{406, 319}"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/maksim/dev/MeanShiftMetal/MeanShift.playground#CharacterRangeLen=1&amp;CharacterRangeLoc=6320&amp;EndingColumnNumber=6&amp;EndingLineNumber=146&amp;StartingColumnNumber=5&amp;StartingLineNumber=146&amp;Timestamp=566997803.184117"
+         lockedSize = "{404, 295}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
