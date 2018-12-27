@@ -14,10 +14,10 @@
 		B561FE8021CBB4DE004DC99D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B561FE7E21CBB4DE004DC99D /* LaunchScreen.storyboard */; };
 		B561FE8821CBB540004DC99D /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = B561FE8721CBB540004DC99D /* input.txt */; };
 		B561FE8D21CBB7CC004DC99D /* mean.metal in Sources */ = {isa = PBXBuildFile; fileRef = B561FE8C21CBB7CC004DC99D /* mean.metal */; };
-		B5BC566621CCE20500E20D46 /* MTLTexture+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC566521CCE20500E20D46 /* MTLTexture+Array.swift */; };
-		B5BC566A21CE3B2E00E20D46 /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC566721CE3B2E00E20D46 /* Float16.swift */; };
-		B5BC566B21CE3B2E00E20D46 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC566821CE3B2E00E20D46 /* Random.swift */; };
-		B5BC566C21CE3B2E00E20D46 /* MTLBuffer+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC566921CE3B2E00E20D46 /* MTLBuffer+Array.swift */; };
+		B5BC567121D4B8F500E20D46 /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC566D21D4B8F500E20D46 /* Float16.swift */; };
+		B5BC567221D4B8F500E20D46 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC566E21D4B8F500E20D46 /* Random.swift */; };
+		B5BC567321D4B8F500E20D46 /* MTLBuffer+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC566F21D4B8F500E20D46 /* MTLBuffer+Array.swift */; };
+		B5BC567421D4B8F500E20D46 /* MTLTexture+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC567021D4B8F500E20D46 /* MTLTexture+Array.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,10 +30,10 @@
 		B561FE8121CBB4DE004DC99D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B561FE8721CBB540004DC99D /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
 		B561FE8C21CBB7CC004DC99D /* mean.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = mean.metal; sourceTree = "<group>"; };
-		B5BC566521CCE20500E20D46 /* MTLTexture+Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MTLTexture+Array.swift"; path = "../../Forge/Forge/MTLTexture+Array.swift"; sourceTree = "<group>"; };
-		B5BC566721CE3B2E00E20D46 /* Float16.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Float16.swift; path = ../../Forge/Forge/Float16.swift; sourceTree = "<group>"; };
-		B5BC566821CE3B2E00E20D46 /* Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Random.swift; path = ../../Forge/Forge/Random.swift; sourceTree = "<group>"; };
-		B5BC566921CE3B2E00E20D46 /* MTLBuffer+Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MTLBuffer+Array.swift"; path = "../../Forge/Forge/MTLBuffer+Array.swift"; sourceTree = "<group>"; };
+		B5BC566D21D4B8F500E20D46 /* Float16.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float16.swift; sourceTree = "<group>"; };
+		B5BC566E21D4B8F500E20D46 /* Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Random.swift; sourceTree = "<group>"; };
+		B5BC566F21D4B8F500E20D46 /* MTLBuffer+Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MTLBuffer+Array.swift"; sourceTree = "<group>"; };
+		B5BC567021D4B8F500E20D46 /* MTLTexture+Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MTLTexture+Array.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,10 +66,10 @@
 		B561FE7421CBB4DA004DC99D /* MeanShiftiOS */ = {
 			isa = PBXGroup;
 			children = (
-				B5BC566721CE3B2E00E20D46 /* Float16.swift */,
-				B5BC566921CE3B2E00E20D46 /* MTLBuffer+Array.swift */,
-				B5BC566821CE3B2E00E20D46 /* Random.swift */,
-				B5BC566521CCE20500E20D46 /* MTLTexture+Array.swift */,
+				B5BC566D21D4B8F500E20D46 /* Float16.swift */,
+				B5BC566F21D4B8F500E20D46 /* MTLBuffer+Array.swift */,
+				B5BC567021D4B8F500E20D46 /* MTLTexture+Array.swift */,
+				B5BC566E21D4B8F500E20D46 /* Random.swift */,
 				B561FE8C21CBB7CC004DC99D /* mean.metal */,
 				B561FE8721CBB540004DC99D /* input.txt */,
 				B561FE7521CBB4DA004DC99D /* AppDelegate.swift */,
@@ -155,12 +155,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B561FE8D21CBB7CC004DC99D /* mean.metal in Sources */,
-				B5BC566621CCE20500E20D46 /* MTLTexture+Array.swift in Sources */,
-				B5BC566B21CE3B2E00E20D46 /* Random.swift in Sources */,
-				B5BC566A21CE3B2E00E20D46 /* Float16.swift in Sources */,
+				B5BC567421D4B8F500E20D46 /* MTLTexture+Array.swift in Sources */,
+				B5BC567121D4B8F500E20D46 /* Float16.swift in Sources */,
+				B5BC567221D4B8F500E20D46 /* Random.swift in Sources */,
+				B5BC567321D4B8F500E20D46 /* MTLBuffer+Array.swift in Sources */,
 				B561FE7821CBB4DA004DC99D /* ViewController.swift in Sources */,
 				B561FE7621CBB4DA004DC99D /* AppDelegate.swift in Sources */,
-				B5BC566C21CE3B2E00E20D46 /* MTLBuffer+Array.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
