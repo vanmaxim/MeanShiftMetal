@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MeanShiftiOS/ViewController.swift"
-            timestampString = "567589614.322109"
+            timestampString = "568807759.17098"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
             landmarkName = "action(_:)"
             landmarkType = "7">
          </BreakpointContent>

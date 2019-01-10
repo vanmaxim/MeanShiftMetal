@@ -39,7 +39,6 @@ class ViewController: UIViewController {
                                                                   mipmapped: false)
         forcesDesc.resourceOptions = .storageModePrivate
         forcesDesc.usage = [.shaderWrite, .shaderRead]
-        let forces = device.makeTexture(descriptor: forcesDesc)!
         
         let reduce = MPSImageReduceRowSum(device: device)
         let reducedDesc = MPSImageDescriptor(channelFormat: .float32, width: 1, height: height, featureChannels: 1)
@@ -48,7 +47,7 @@ class ViewController: UIViewController {
         let reduced = MPSImage(device: device, imageDescriptor: reducedDesc)
         
         let normalizedDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float, width: width, height: height, mipmapped: false)
-        normalizedDesc.usage = [.shaderRead, .shaderWrite]
+        normalizedDesc.usage = .shaderWrite
         normalizedDesc.storageMode = .private
         let normalized = device.makeTexture(descriptor: normalizedDesc)!
         
@@ -66,6 +65,8 @@ class ViewController: UIViewController {
             encoder.setBuffer(input, offset: 0, index: 0)
             encoder.setBuffer(squaredSum, offset: 0, index: 1)
             encoder.setBytes(&height, length: MemoryLayout<Int>.size, index: 2)
+            
+            let forces = device.makeTexture(descriptor: forcesDesc)!
             
             dispathGridAsRow(device: device,
                              function: library.makeFunction(name: "square_sum")!,
@@ -120,10 +121,116 @@ class ViewController: UIViewController {
             
             buffer.commit()
             buffer.waitUntilCompleted()
-            
-            let i = inputMatrix.data.toFloatArray()
-            print("")
         }
+        
+        let buffer = commandQueue.makeCommandBuffer()!
+        
+        let sedEnc = buffer.makeComputeCommandEncoder()!
+        
+        let distancesDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float,
+                                                                     width: width,
+                                                                     height: height,
+                                                                     mipmapped: false)
+        //distancesDesc.resourceOptions = .storageModePrivate
+        distancesDesc.usage = [.shaderWrite, .shaderRead]
+        let distances = device.makeTexture(descriptor: distancesDesc)!
+        
+        sedEnc.setBuffer(inputMatrix.data, offset: 0, index: 0)
+        sedEnc.setBuffer(squaredSum, offset: 0, index: 1)
+        sedEnc.setBytes(&height, length: MemoryLayout<Int>.size, index: 2)
+        
+        dispathGridAsRow(device: device,
+                         function: library.makeFunction(name: "square_sum")!,
+                         encoder: sedEnc,
+                         rowLenght: height)
+        
+        sedEnc.setBuffer(input, offset: 0, index: 0)
+        sedEnc.setBuffer(squaredSum, offset: 0, index: 1)
+        var sedSigm = 0
+        sedEnc.setBytes(&sedSigm, length: MemoryLayout<Float>.size, index: 2)
+        sedEnc.setTexture(distances, index: 0)
+        
+        dispathGridAsMatrix(device: device,
+                            function: library.makeFunction(name: "calculate_force")!,
+                            encoder: sedEnc,
+                            width: width,
+                            height: height)
+        sedEnc.endEncoding()
+        
+        buffer.commit()
+        buffer.waitUntilCompleted()
+    
+        var mask = [Int32](repeating: 0, count: width)
+        let S = distances.toFloatArray(width: distances.width, height: distances.height, featureChannels: distances.depth)
+        
+        let start = DispatchTime.now()
+        var cls: Int32 = 1
+        for i in 0..<mask.count {
+            if mask[i] != 0 {
+                continue
+            }
+            mask[i] = cls
+            
+            for j in (i + 1)..<mask.count {
+                if mask[j] != 0 {
+                    continue
+                }
+                let idx = j * distances.width + i;
+                if S[idx] < 0.1 {
+                    mask[j] = cls;
+                }
+            }
+            cls += 1
+        }
+        let end = DispatchTime.now()
+        
+        let diff = (end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000
+        
+        let testRes: [Int32] =
+            [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1,
+            1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1, 2, 2, 2, 3, 3, 2, 2, 4, 2, 5, 2, 5, 5, 5,
+            5, 2, 6, 5, 5, 2, 2, 6, 6, 6, 5, 5, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6]
+        
+        assert(mask == testRes)
+        
+        print("Hello")
     }
  
     override func viewDidLoad() {
