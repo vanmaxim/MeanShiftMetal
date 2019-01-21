@@ -24,6 +24,8 @@ class ViewController: UIViewController {
         
         let data = getInput()
         
+        let start = DispatchTime.now()
+        
         let width = data.count
         var height = data.count
         
@@ -41,10 +43,11 @@ class ViewController: UIViewController {
         forcesDesc.usage = [.shaderWrite, .shaderRead]
         
         let reduce = MPSImageReduceRowSum(device: device)
-        let reducedDesc = MPSImageDescriptor(channelFormat: .float32, width: 1, height: height, featureChannels: 1)
-        reducedDesc.usage = [.shaderRead, .shaderWrite]
+        
+        let reducedDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float, width: 1, height: height, mipmapped: false)
+        reducedDesc.usage = [.shaderWrite, .shaderRead]
         reducedDesc.storageMode = .private
-        let reduced = MPSImage(device: device, imageDescriptor: reducedDesc)
+        let reduced = device.makeTexture(descriptor: reducedDesc)!
         
         let normalizedDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float, width: width, height: height, mipmapped: false)
         normalizedDesc.usage = .shaderWrite
@@ -55,11 +58,9 @@ class ViewController: UIViewController {
         
         let forcesMatrix = MPSMatrix(buffer: forcesBuff,
                                      descriptor: MPSMatrixDescriptor(rows: height, columns: width, rowBytes: MemoryLayout<Float>.size * width, dataType: .float32))
-        
-        for _ in 0..<10 {
-            
-            let buffer = commandQueue.makeCommandBuffer()!
-            
+        let buffer = commandQueue.makeCommandBuffer()!
+        for _ in 0..<6 {
+
             let encoder = buffer.makeComputeCommandEncoder()!
             
             encoder.setBuffer(input, offset: 0, index: 0)
@@ -79,23 +80,19 @@ class ViewController: UIViewController {
             encoder.setBytes(&sigma, length: MemoryLayout<Float>.size, index: 2)
             
             dispathGridAsMatrix(device: device,
-                                function: library.makeFunction(name: "calculate_force")!,
+                                function: library.makeFunction(name: "calculate_distances")!,
                                 encoder: encoder,
                                 width: width,
                                 height: height)
             
             encoder.endEncoding()
             
-            
-            reduce.encode(commandBuffer: buffer,
-                          sourceImage: MPSImage(texture: forces, featureChannels: 1),
-                          destinationImage: reduced)
-            
+            reduce.encode(commandBuffer: buffer, sourceTexture: forces, destinationTexture: reduced)
             
             let normEncoder = buffer.makeComputeCommandEncoder()!
             
             normEncoder.setTexture(forces, index: 0)
-            normEncoder.setTexture(reduced.texture, index: 1)
+            normEncoder.setTexture(reduced, index: 1)
             normEncoder.setTexture(normalized, index: 2)
             
             dispathGridAsMatrix(device: device,
@@ -118,12 +115,8 @@ class ViewController: UIViewController {
                         leftMatrix: forcesMatrix,
                         rightMatrix: inputMatrix,
                         resultMatrix: inputMatrix)
-            
-            buffer.commit()
-            buffer.waitUntilCompleted()
         }
-        
-        let buffer = commandQueue.makeCommandBuffer()!
+
         
         let sedEnc = buffer.makeComputeCommandEncoder()!
         
@@ -151,7 +144,7 @@ class ViewController: UIViewController {
         sedEnc.setTexture(distances, index: 0)
         
         dispathGridAsMatrix(device: device,
-                            function: library.makeFunction(name: "calculate_force")!,
+                            function: library.makeFunction(name: "calculate_distances")!,
                             encoder: sedEnc,
                             width: width,
                             height: height)
@@ -159,11 +152,10 @@ class ViewController: UIViewController {
         
         buffer.commit()
         buffer.waitUntilCompleted()
-    
+        
         var mask = [Int32](repeating: 0, count: width)
         let S = distances.toFloatArray(width: distances.width, height: distances.height, featureChannels: distances.depth)
         
-        let start = DispatchTime.now()
         var cls: Int32 = 1
         for i in 0..<mask.count {
             if mask[i] != 0 {
@@ -182,9 +174,12 @@ class ViewController: UIViewController {
             }
             cls += 1
         }
+        
         let end = DispatchTime.now()
         
-        let diff = (end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000
+        let diff = Double(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000
+        print(diff)
+        
         
         let testRes: [Int32] =
             [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1,
